@@ -5,6 +5,20 @@ ESX = nil
 
 TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
 
+local function disablekeys()
+    enable = not enable 
+    CreateThread(function()
+        while enable do 
+            Wait(0)
+            DisableControlAction(0, 1, guiEnabled) -- LookLeftRight
+            DisableControlAction(0, 2, guiEnabled) -- LookUpDown
+            DisableControlAction(0, 142, guiEnabled) -- MeleeAttackAlternate
+            DisableControlAction(0, 106, guiEnabled) -- VehicleMouseControlOverride
+        end
+    end)
+end
+
+
 function EnableGui(enable)
     
     SetNuiFocus(enable, enable)
@@ -17,7 +31,11 @@ function EnableGui(enable)
 
     if enable then
         TriggerScreenblurFadeIn(0)
-    else TriggerScreenblurFadeOut(0) end
+        disablekeys()
+    else 
+        TriggerScreenblurFadeOut(0) 
+        disablekeys()
+    end
 end
 
 RegisterNetEvent("weasel-crafting:openMenu")
@@ -138,14 +156,14 @@ function hasItems(Item, amount)
 end
 
 
-Citizen.CreateThread(function()
-    while true do
-        if guiEnabled then
-            DisableControlAction(0, 1, guiEnabled) -- LookLeftRight
-            DisableControlAction(0, 2, guiEnabled) -- LookUpDown
-            DisableControlAction(0, 142, guiEnabled) -- MeleeAttackAlternate
-            DisableControlAction(0, 106, guiEnabled) -- VehicleMouseControlOverride
-        end
-        Citizen.Wait(0)
-    end
-end)
+-- Citizen.CreateThread(function()
+--     while true do
+--         if guiEnabled then
+--             DisableControlAction(0, 1, guiEnabled) -- LookLeftRight
+--             DisableControlAction(0, 2, guiEnabled) -- LookUpDown
+--             DisableControlAction(0, 142, guiEnabled) -- MeleeAttackAlternate
+--             DisableControlAction(0, 106, guiEnabled) -- VehicleMouseControlOverride
+--         end
+--         Citizen.Wait(0)
+--     end
+-- end)
